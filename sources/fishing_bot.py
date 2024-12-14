@@ -74,7 +74,7 @@ class FishermanBot:
                 time.sleep(2.5)
                 self.STATE = "CAST"
             elif self.STATE == "CAST":
-                time.sleep(random.uniform(12,15))
+                time.sleep(20)
                 if self.STATE == "CAST":
                     self.log_info("Seems to be stuck on cast. Recasting")
                     self.STATE = "CASTING"
