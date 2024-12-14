@@ -1,0 +1,12 @@
+cv2
+numpy
+pyautogui
+pyaudio
+win32api
+configparser
+dearpygui
+win32gui
+win32ui
+win32con
+pywin32
+audioo
