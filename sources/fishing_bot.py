@@ -53,7 +53,7 @@ class FishermanBot:
                 data = stream.read(1024)
                 reading = audioop.max(data, 2)
                 self.total += reading
-                if self.total > self.max_volume and self.STATE not in ["SOLVING", "DELAY", "CASTING"]:
+                if self.total > self.max_volume and self.STATE not in ["SOLVING", "DELAY", "CASTING", "EATING"]:
                     self.do_minigame()
 
     def get_new_spot(self):
@@ -62,7 +62,10 @@ class FishermanBot:
     def cast_hook(self):
         while not self.stop_button:
             if self.STATE in ["CASTING", "STARTED"]:
-                time.sleep(2.6)
+                time.sleep(random.uniform(1.2, 3.0))
+                if self.fish_count % 10 == 0:
+                    pyautogui.press('1')
+                    time.sleep(0.2)
                 pyautogui.mouseUp()
                 x, y = self.get_new_spot()
                 pyautogui.moveTo(x, y, tween=pyautogui.linear, duration=0.2)
@@ -78,9 +81,20 @@ class FishermanBot:
                 if self.STATE == "CAST":
                     self.log_info("Seems to be stuck on cast. Recasting")
                     self.STATE = "CASTING"
+    def eat_food(self):
+        while not self.stop_button:
+            time.sleep(1800)
+            self.STATE = "EATING"
+            if self.STATE == "EATING":
+                self.log_info("EATING FOOD")
+                pyautogui.press('2')
+                self.STATE = "CASTING"
+                
 
+
+                
     def do_minigame(self):
-        if self.STATE not in ["CASTING", "STARTED"]:
+        if self.STATE not in ["CASTING", "STARTED", "EATING"]:
             self.STATE = "SOLVING"
             self.log_info(f"STATE {self.STATE}")
             pyautogui.mouseDown()
@@ -167,10 +181,13 @@ class FishermanBot:
     def start_bot(self):
         self.log_info("Bot started successfully.")
         self.stop_button = False
+        threading.Thread(target=self.eat_food).start()
         threading.Thread(target=self.check_volume).start()
         threading.Thread(target=self.cast_hook).start()
+        time.sleep(1)
+        pyautogui.press('q')
+        time.sleep(2)
         self.STATE = "STARTED"
-        pyautogui.press("1")
 
     def stop_bot(self):
         self.log_info("Bot stopped.")
