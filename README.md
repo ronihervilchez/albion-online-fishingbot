@@ -23,6 +23,18 @@ You'll mainly look into main.py do_minigame() inside fishing_bot.py to make adju
 
 The images which have _2 are made in 1600x900, the others are in 1024x728. Opencv matches the fishing bob better with the in-game images if they're of the same resolution.
 
+I have a screen with 1920x1080 resolution, if you've installed the VB-Cable and set everything right for sound detection but the bot doesn't complete the minigame, add this like in main():
+
+`threading.Thread(target=debug).start()`
+
+in order to see what the bot sees, if you are doing the minigame and the minigame bar is not fit inside the debug window, then the touple `screenshot = wincap.get_screenshot(region=(690, 440, 210, 55))` does not have the right values for your game resolution/screen
+
+`region` is used inside windowcapture.py at get_screenshot if it helps out looking at what the bot does with those values (x, y, width, height of the minigame bar).
+
+Adjust those values in order for the minigame bar to fit inside the debug window, then change inside main `bot = FishermanBot('./bobber_2.png', './empty_bar_2.png', (690, 440, 210, 55))` with your proper values.
+
+If that doesn't work either or works poorly, then it might be because opencv doesn't recognizes MY image samples on your screen and game resolution, then you must take screenshots and crop and edit them like my samples and use them instead. 
+
 # And another word
 
 Don't expect updates on this code, but you can expect sooner or later some other bots using opencv and maybe even machine learning for gathering.
